@@ -1,0 +1,7 @@
+.Hiera--container {
+	position: relative;
+}
+.Tiers--group {
+	flex-wrap: nowrap;
+	overflow: hidden;
+}
