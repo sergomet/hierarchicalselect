@@ -40,6 +40,7 @@ class TierGroup {
 
 		this.group =[];
 		this._html();
+		this._controls();
 		this.createTier();
 	}        
 
@@ -47,6 +48,25 @@ class TierGroup {
 		this.element.addClass('Hiera--container');
 		this.element.append(this.$breadcrumbs);
 		this.element.append(this.$tiers);
+
+		this.$controls ={};
+		this.$controls.prev =$('<button/>',{text:'Prev'});
+		this.$controls.next =$('<button/>',{text:'Next'});
+		this.$tierControls =$('<div/>',{class:'Tier--controls mt-1 text-center'});
+		this.$tierControls.append(this.$controls.prev);
+		this.$tierControls.append(this.$controls.next);
+
+		this.element.append(this.$tierControls);
+	}
+
+	_controls() {
+		this.$controls.prev.click(this._prev.bind(this))
+	}
+
+	_prev(e) {
+		console.dir(this.getTierWith());
+		e.preventDefault();
+		this.$tiers.stop().animate({scrollLeft:this.getTierWith()}, 200);
 	}
 
 	buildBreadcrumbs() {
@@ -58,17 +78,22 @@ class TierGroup {
 		})	
 	}
 
+	getTierWith() {
+		return this.group[0].$container[0].offsetWidth;
+	}
+
 	createTier() {
 		const newTier = this.buildTier();
 		this.appendTier(newTier);
 		this.group.push(newTier);
 		this.buildBreadcrumbs();
 
-		let tierWidth =newTier.$container[0].offsetWidth;
+		let tierWidth =this.getTierWith.call(this);
 		let containerWidth =this.element[0].offsetWidth;
 		let maxTiers =Math.round(containerWidth / tierWidth);
 		let offsetTiers =this.group.length-maxTiers;
 		let offsetWidth =offsetTiers*(tierWidth);
+
 		if (this.group.length >= maxTiers ) {
 			console.dir(offsetWidth);
 			this.$tiers.stop().animate({scrollLeft:offsetWidth}, 200);
