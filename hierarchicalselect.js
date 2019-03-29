@@ -1,31 +1,4 @@
 'use strict';
-
-class Tier {
-
-  constructor(options) {
-  	this.options =options;
-  	this.node =this.options.node;
-  	this.$container =$('<div/>',{class:'Tier--container col-3'});
-    this.$select =$('<select/>', {
-    	class:'form-control',
-    	size:this.options.tierSize,
-    	'data-node': this.options.node 
-    });
-    this.$container.html(this.$select);
-    this.load();
-  }
-  
-  load() {
-    axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
-      for (let row in res.data) {
-        this.$select.append('<option>'+res.data[row].name+'</option>')
-      }
-    })
-  }
-  
-}
-
-
 class TierGroup {
 
 	constructor(el, options) {
@@ -40,7 +13,7 @@ class TierGroup {
 
 		this.group =[];
 		this._html();
-		this._controls();
+		this._events();
 		this.createTier();
 	}        
 
@@ -50,23 +23,24 @@ class TierGroup {
 		this.element.append(this.$tiers);
 
 		this.$controls ={};
-		this.$controls.prev =$('<button/>',{text:'Prev'});
-		this.$controls.next =$('<button/>',{text:'Next'});
-		this.$tierControls =$('<div/>',{class:'Tier--controls mt-1 text-center'});
+		this.$controls.prev =$('<button/>',{text:'Prev',class:'btn btn-info'});
+		this.$controls.next =$('<button/>',{text:'Next',class:'btn btn-info'});
+		this.$tierControls =$('<div/>',{class:'Tier--controls mt-1 btn-group'});
 		this.$tierControls.append(this.$controls.prev);
 		this.$tierControls.append(this.$controls.next);
-
 		this.element.append(this.$tierControls);
 	}
 
-	_controls() {
-		this.$controls.prev.click(this._prev.bind(this))
-	}
+	_events() {
+		this.$controls.next.click(e => {
+			e.preventDefault();
+			this._slide.call(this,'right');
+		});
 
-	_prev(e) {
-		console.dir(this.getTierWith());
-		e.preventDefault();
-		this.$tiers.stop().animate({scrollLeft:this.getTierWith()}, 200);
+		this.$controls.prev.click(e => {
+			e.preventDefault();
+			this._slide.call(this,'left');
+		});		
 	}
 
 	buildBreadcrumbs() {
@@ -82,22 +56,48 @@ class TierGroup {
 		return this.group[0].$container[0].offsetWidth;
 	}
 
+	_slide(direction) {
+		let options ={
+			containerWidth: this.element[0].offsetWidth,
+			tierWidth:this.getTierWith(),
+			tiersCount:this.group.length,
+			maxTiers:0,
+			scrollValue:this.$tiers[0].scrollLeft,
+			animate:{},
+		}
+		options.maxTiers =Math.round(options.containerWidth / options.tierWidth);
+
+
+		if (direction === 'right') {
+			options.scrollValue +=options.tierWidth;
+		} else {
+			options.scrollValue -=options.tierWidth;
+		}
+
+		// console.dir(options);
+
+		if (options.tiersCount >= options.maxTiers) {
+			this.$tiers.animate({scrollLeft: options.scrollValue}, 200);
+		}
+
+		if (options.tiersCount > options.maxTiers) {
+			this.$controls.prev.removeAttr('disabled');
+			this.$controls.next.removeAttr('disabled');
+		} else {
+			this.$controls.prev.attr('disabled',true);
+			this.$controls.next.attr('disabled',true);
+		}
+
+	}
+
 	createTier() {
 		const newTier = this.buildTier();
 		this.appendTier(newTier);
 		this.group.push(newTier);
 		this.buildBreadcrumbs();
 
-		let tierWidth =this.getTierWith.call(this);
-		let containerWidth =this.element[0].offsetWidth;
-		let maxTiers =Math.round(containerWidth / tierWidth);
-		let offsetTiers =this.group.length-maxTiers;
-		let offsetWidth =offsetTiers*(tierWidth);
+		this._slide.call(this,'right');
 
-		if (this.group.length >= maxTiers ) {
-			console.dir(offsetWidth);
-			this.$tiers.stop().animate({scrollLeft:offsetWidth}, 200);
-		}
     }
 
     newTierOptions() {
