@@ -4,7 +4,8 @@ class TierGroup {
 	constructor(el, options) {
 		this.element =el;
 		this.options =$.extend({
-			tierSize:5
+			ajax: 'api/categories_1.json',
+			tierSize: 5
 		},options);
 
 		this.$container =el;
@@ -46,9 +47,10 @@ class TierGroup {
 	buildBreadcrumbs() {
 		this.$breadcrumbs.html('');
 		this.group.forEach(item => {
-			let val =item.$select.val();
-			if (val === null) return;
-			this.$breadcrumbs.append('<span class="bg-light border p-1">' +val+'</span>');
+			let sel =item.$select[0];
+			if (sel.selectedIndex === -1) return;
+			let selectedText = sel.options[sel.selectedIndex].text;
+			this.$breadcrumbs.append('<span class="bg-light border p-1">' +selectedText+'</span>');
 		})	
 	}
 
@@ -101,10 +103,19 @@ class TierGroup {
     }
 
     newTierOptions() {
-    	return $.extend({
-    		node:this.group.length,
-    		tierSize: 5
+    	let options = $.extend({
+    		node: this.group.length,
+    		// tierSize: 5
     	},this.options);
+
+    	// set last selected value
+    	let lastSelectedIndex = this.group.length-1;
+    	let lastSelectedTier = this.group[lastSelectedIndex];
+    	if (typeof lastSelectedTier === 'object') {
+    		options.ajax += '?selected=' +this.group[lastSelectedIndex].$select.val();
+    	}
+    	
+    	return options;
     }
 
     onChangeTier(tier) {

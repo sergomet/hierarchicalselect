@@ -1,3 +1,3 @@
 $('#demo1').HierarchicalSelect({
-    ajax: '#'
+    ajax: 'api/categories_1.json'
 });

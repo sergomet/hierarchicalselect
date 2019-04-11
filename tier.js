@@ -15,11 +15,19 @@ class Tier {
   }
   
   load() {
-    axios.get('https://jsonplaceholder.typicode.com/users').then(res => {
-      for (let row in res.data) {
-        this.$select.append('<option>'+res.data[row].name+'</option>')
-      }
-    })
+
+  	$.ajax({
+  		url: this.options.ajax,
+  	})
+  	.done(res => {
+  		res.forEach(item => {
+  			this.$select.append(`<option value="${item.id}">${item.name}</option>`)
+  		});
+  	})
+  	.fail(err => {
+  		console.log("error");
+  		console.dir(err);
+  	})
   }
   
 }

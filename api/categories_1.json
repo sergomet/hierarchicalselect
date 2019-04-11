@@ -1,0 +1,72 @@
+[
+  	{
+	    "id": 1,
+	    "parent_id": null,
+	    "name": "Men's fashion"
+	},
+	{
+		"id": 2,
+	    "parent_id": 1,
+	    "name": "Hoodies & Sweatshirts"
+	},
+	{
+		"id": 3,
+	    "parent_id": 1,
+	    "name": "Tops & Tees"
+	},
+	{
+		"id": 4,
+	    "parent_id": 1,
+	    "name": "Jackets & Coats"
+	},
+	{
+		"id": 5,
+	    "parent_id": 1,
+	    "name": "Pants"
+	},
+	{
+		"id": 6,
+	    "parent_id": null,
+	    "name": "Computer & Office"
+	},
+	{
+		"id": 7,
+	    "parent_id": 6,
+	    "name": "Office Electronics"
+	},
+	{
+		"id": 8,
+	    "parent_id": 6,
+	    "name": "Servers"
+	},
+	{
+		"id": 9,
+	    "parent_id": null,
+	    "name": "Casa si gradina"
+	},
+	{
+		"id": 10,
+	    "parent_id": 9,
+	    "name": "Gradina"
+	},
+	{
+		"id": 11,
+	    "parent_id": 10,
+	    "name": "Mobilier Gradina"
+	},
+	{
+		"id": 11,
+	    "parent_id": 10,
+	    "name": "Mobilier Gradina"
+	},
+	{
+		"id": 12,
+	    "parent_id": 11,
+	    "name": "Mobilier Exterior"
+	},
+	{
+		"id": 13,
+	    "parent_id": 11,
+	    "name": "Mobilier Interior"
+	}
+]
